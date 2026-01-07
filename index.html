@@ -17,17 +17,28 @@
 
         body {
             font-family: 'Prompt', sans-serif;
-            background: url('https://images.unsplash.com/photo-1556623696-291771804e12?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed; 
+            
+            /* --- พื้นหลัง MODERN DARK (โหมดมืด) --- */
+            /* ใช้การซ้อน Gradient สีน้ำเงินเข้มทับภาพทรงเลขาคณิตมืดๆ เพื่อความทันสมัย */
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), rgba(23, 37, 84, 0.9)),
+                        url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
-            background-color: #1a1a1a;
-            transition: background-image 0.5s ease-in-out;
+            background-color: #0f172a; /* สีสำรอง */
+            transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
         }
 
         /* --- LIGHT MODE STYLES --- */
         body.light-mode {
-            background-image: url('https://images.unsplash.com/photo-1627464082725-783321523277?q=80&w=1920&auto=format&fit=crop');
+             /* --- พื้นหลัง MODERN LIGHT (โหมดสว่าง) --- */
+             /* ใช้ Gradient สีขาว-เทาอ่อน ทับภาพพื้นผิวสะอาดๆ */
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(243, 244, 246, 0.95)),
+                        url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #f9fafb;
             color: #333;
         }
+
+        
         body.light-mode .backdrop-overlay {
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(6px);
