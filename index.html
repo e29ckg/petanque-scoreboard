@@ -11,54 +11,110 @@
 
     <style>
         :root {
-            /* ปรับค่าเริ่มต้นให้ใหญ่ขึ้น (จาก 1 เป็น 1.4) */
             --font-scale: 1.4;
         }
 
         body {
             font-family: 'Prompt', sans-serif;
-            
-            /* --- พื้นหลัง MODERN DARK (โหมดมืด) --- */
-            /* ใช้การซ้อน Gradient สีน้ำเงินเข้มทับภาพทรงเลขาคณิตมืดๆ เพื่อความทันสมัย */
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), rgba(23, 37, 84, 0.9)),
-                        url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            /* พื้นหลัง Modern Dark */
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 30%, #1a365d 60%, #0d1b2a 100%);
             background-size: cover;
-            background-color: #0f172a; /* สีสำรอง */
-            transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
+            transition: background 0.5s ease-in-out;
+            min-height: 100vh;
         }
 
         /* --- LIGHT MODE STYLES --- */
         body.light-mode {
-             /* --- พื้นหลัง MODERN LIGHT (โหมดสว่าง) --- */
-             /* ใช้ Gradient สีขาว-เทาอ่อน ทับภาพพื้นผิวสะอาดๆ */
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(243, 244, 246, 0.95)),
-                        url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
-            background-color: #f9fafb;
-            color: #333;
+            color: #1a365d;
+            /* พื้นหลัง Modern Light */
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
         }
-
-        
+  
         body.light-mode .backdrop-overlay {
             background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(4px);
         }
-        body.light-mode .score-card {
-            background: rgba(255, 255, 255, 0.95) !important;
-            border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+
+        /* ปรับสีตัวอักษรในโหมดสว่าง */
+        body.light-mode .text-white { color: #1e3a5f !important; }
+        body.light-mode .text-gray-400 { color: #64748b !important; }
+        body.light-mode .border-gray-500\/30 { border-color: rgba(0,0,0,0.1) !important; }
+        
+        /* เปลี่ยนสีส่วน History ด้านล่างในโหมดสว่าง */
+        body.light-mode .history-section {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            border-top: 1px solid rgba(0,0,0,0.05);
         }
-        body.light-mode .text-white { color: #1f2937 !important; }
-        body.light-mode .text-gray-400 { color: #4b5563 !important; }
-        body.light-mode .border-gray-700\/50 { border-color: rgba(0,0,0,0.1) !important; }
-        body.light-mode .bg-black\/40 { background-color: rgba(0,0,0,0.05) !important; }
         
         body.light-mode .control-btn {
             background-color: rgba(255,255,255,0.9);
             color: #333;
             border-color: #ccc;
         }
-        /* ----------------------- */
+
+        /* --- CARD COLOR STYLES (หัวใจสำคัญของการปรับสีจางๆ) --- */
+        
+        /* 1. สีม่วง (Purple) */
+        .card-purple {
+            background: rgba(88, 28, 135, 0.25); /* Dark: ม่วงเข้มจางๆ */
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+        }
+        body.light-mode .card-purple {
+            background: rgba(243, 232, 255, 0.9); /* Light: ม่วงพาสเทล */
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.15);
+        }
+
+        /* 2. สีแดง (Red) */
+        .card-red {
+            background: rgba(153, 27, 27, 0.25); /* Dark: แดงเข้มจางๆ */
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+        body.light-mode .card-red {
+            background: rgba(254, 226, 226, 0.9); /* Light: แดงพาสเทล */
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.15);
+        }
+
+        /* 3. สีเหลือง (Yellow) */
+        .card-yellow {
+            background: rgba(113, 63, 18, 0.3); /* Dark: เหลืองโคลนจางๆ (เพื่อให้เห็นตัวหนังสือ) */
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.1);
+        }
+        body.light-mode .card-yellow {
+            background: rgba(254, 252, 232, 0.9); /* Light: เหลืองครีม */
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            box-shadow: 0 10px 20px rgba(234, 179, 8, 0.15);
+        }
+
+        /* 4. สีน้ำเงิน (Blue) */
+        .card-blue {
+            background: rgba(30, 58, 138, 0.3); /* Dark: น้ำเงินเข้มจางๆ */
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+        body.light-mode .card-blue {
+            background: rgba(219, 234, 254, 0.9); /* Light: ฟ้าพาสเทล */
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.15);
+        }
+
+        /* 5. สีฟ้า (Cyan) */
+        .card-cyan {
+            background: rgba(22, 78, 99, 0.3);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+        }
+        body.light-mode .card-cyan {
+            background: rgba(207, 250, 254, 0.9);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.15);
+        }
+
+        /* ---------------------------------------------------- */
 
         .backdrop-overlay { 
             background: rgba(0, 0, 0, 0.85); 
@@ -67,17 +123,9 @@
         }
 
         .score-card { 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: visible; 
         }
-
-        /* --- COLORS & NEON GLOW (4 สีหลัก) --- */
-        .glow-purple { box-shadow: 0 0 30px rgba(168, 85, 247, 0.3); border-top: 6px solid #a855f7; }
-        .glow-red { box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); border-top: 6px solid #ef4444; }
-        .glow-yellow { box-shadow: 0 0 30px rgba(234, 179, 8, 0.3); border-top: 6px solid #eab308; }
-        .glow-blue { box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); border-top: 6px solid #3b82f6; }
-        .glow-cyan { box-shadow: 0 0 30px rgba(6, 182, 212, 0.3); border-top: 6px solid #06b6d4; }
 
         .score-number {
             font-size: calc(6rem * var(--font-scale));
@@ -87,12 +135,12 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Neon Text Logic (ตัวเลขคมชัด) */
+        /* Neon Text Logic */
         .neon-text {
             text-shadow: 0 0 1px currentColor, 0 0 10px currentColor;
         }
         body.light-mode .neon-text {
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.15) !important;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1) !important;
             filter: drop-shadow(0 0 0 transparent);
         }
 
@@ -155,14 +203,11 @@
     <script src="config.js"></script>
 
     <script>
-        // ใช้ค่าจาก config.js
         const SHEET_ID = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_ID : '';
         const SHEET_NAME = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_NAME : 'Sheet1';
         const REFRESH_RATE = (typeof CONFIG !== 'undefined') ? CONFIG.REFRESH_RATE : 2000;
 
         let previousScores = {};
-        
-        // --- ปรับค่าเริ่มต้นตรงนี้ ให้เป็น 1.4 (ใหญ่ขึ้น) ---
         let currentScale = 1.4; 
 
         function toggleTheme() {
@@ -189,7 +234,6 @@
                 const rows = json.table.rows;
                 const cols = json.table.cols;
 
-                // ดึงชื่อกีฬาจากหัวตารางช่อง A1
                 const sportName = cols[0].label;
                 if (sportName && sportName.trim() !== "") {
                     document.getElementById('sport-title').innerText = sportName;
@@ -236,7 +280,7 @@
             const container = document.getElementById('score-container');
             let html = '';
             
-            // --- ปรับ Grid อัตโนมัติ (1-2 ทีม จอใหญ่ / 3-4 ทีม จอปกติ) ---
+            // Grid Adjustments
             let baseClasses = "grid gap-6 w-full max-w-[95%] h-full max-h-[85vh] overflow-y-auto pb-4 pt-10 px-2 transition-all duration-500";
             if (teams.length <= 2) {
                 container.className = `${baseClasses} grid-cols-1 md:grid-cols-2`;
@@ -251,36 +295,49 @@
                 const isChanged = previousScores[team.name] !== undefined && previousScores[team.name] !== team.score;
                 const animationClass = isChanged ? 'animate__animated animate__heartBeat' : '';
                 
+                // Color mapping logic
+                const colorKey = team.color ? team.color.toLowerCase() : 'red';
+                
+                // 1. เลือก Class ตามสี (CSS จัดการเรื่อง Dark/Light ให้เอง)
+                let cardClass = 'card-red'; // default
+                if (colorKey.includes('purple') || colorKey.includes('ม่วง')) cardClass = 'card-purple';
+                else if (colorKey.includes('yellow') || colorKey.includes('เหลือง')) cardClass = 'card-yellow';
+                else if (colorKey.includes('blue') || colorKey.includes('น้ำเงิน')) cardClass = 'card-blue';
+                else if (colorKey.includes('cyan') || colorKey.includes('ฟ้า')) cardClass = 'card-cyan';
+                else if (colorKey.includes('red') || colorKey.includes('แดง')) cardClass = 'card-red';
+
+                // Neon Text Color Mapping
                 const colorMap = {
-                    'purple': 'text-purple-500 glow-purple border-purple-500', 'สีม่วง': 'text-purple-500 glow-purple border-purple-500', 'ม่วง': 'text-purple-500 glow-purple border-purple-500',
-                    'red': 'text-red-500 glow-red border-red-500', 'สีแดง': 'text-red-500 glow-red border-red-500', 'แดง': 'text-red-500 glow-red border-red-500',
-                    'yellow': 'text-yellow-400 glow-yellow border-yellow-400', 'สีเหลือง': 'text-yellow-400 glow-yellow border-yellow-400', 'เหลือง': 'text-yellow-400 glow-yellow border-yellow-400',
-                    'blue': 'text-blue-500 glow-blue border-blue-500', 'สีน้ำเงิน': 'text-blue-500 glow-blue border-blue-500', 'น้ำเงิน': 'text-blue-500 glow-blue border-blue-500',
-                    'cyan': 'text-cyan-400 glow-cyan border-cyan-400'
+                    'purple': 'text-purple-500', 'สีม่วง': 'text-purple-500', 'ม่วง': 'text-purple-500',
+                    'red': 'text-red-500', 'สีแดง': 'text-red-500', 'แดง': 'text-red-500',
+                    'yellow': 'text-yellow-400', 'สีเหลือง': 'text-yellow-400', 'เหลือง': 'text-yellow-400',
+                    'blue': 'text-blue-500', 'สีน้ำเงิน': 'text-blue-500', 'น้ำเงิน': 'text-blue-500',
+                    'cyan': 'text-cyan-400'
                 };
                 
-                const themeFull = colorMap[team.color] || colorMap[team.color.toLowerCase()] || 'text-white border-white';
-                const textColor = themeFull.split(' ')[0];
-                
-                // ตราผู้นำ (มงกุฎ)
-                const leaderBadge = (team.score === maxScore && team.score > minScore) 
-                    ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__bounceIn  z-20">👑</div>` 
-                    : '';
+                // Default text color logic
+                let textColor = colorMap[colorKey] || 'text-white';
+                // ถ้าหาไม่เจอใน map ลองดูว่า key มีคำว่าอะไรบ้าง
+                if(textColor === 'text-white') {
+                     if (colorKey.includes('purple')) textColor = 'text-purple-500';
+                     else if (colorKey.includes('blue')) textColor = 'text-blue-500';
+                     else if (colorKey.includes('yellow')) textColor = 'text-yellow-400';
+                     else if (colorKey.includes('red')) textColor = 'text-red-500';
+                }
 
-                // ตราผู้ตาม (หมู 🐷)
+                const leaderBadge = (team.score === maxScore && team.score > minScore) 
+                    ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__bounceIn z-20">👑</div>` : '';
                 const loserBadge = (team.score === minScore && team.score < maxScore)
-                    ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__pulse animate__infinite z-20">🐷</div>`
-                    : '';
+                    ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__pulse animate__infinite z-20">🐷</div>` : '';
                 
-                // Mood คนแพ้
-                const cardMood = (team.score === minScore && team.score < maxScore) ? 'brightness-90 grayscale-[0.3]' : '';
+                const cardMood = (team.score === minScore && team.score < maxScore) ? 'brightness-90 grayscale-[0.2]' : '';
 
                 let historyHtml = team.history.length > 0 
-                    ? team.history.slice().reverse().map(h => `<div class="flex justify-between items-center text-sm py-1 border-b border-gray-700/50 last:border-0"><span class="text-gray-400">${h.round}</span><span class="font-bold ${textColor}">+${h.val}</span></div>`).join('') 
-                    : `<div class="text-center text-xs text-gray-600 py-2">- ยังไม่มีคะแนน -</div>`;
+                    ? team.history.slice().reverse().map(h => `<div class="flex justify-between items-center text-sm py-1 border-b border-gray-500/30 last:border-0"><span class="text-gray-400">${h.round}</span><span class="font-bold ${textColor}">+${h.val}</span></div>`).join('') 
+                    : `<div class="text-center text-xs text-gray-400 py-2">- ยังไม่มีคะแนน -</div>`;
 
                 html += `
-                    <div class="relative score-card bg-gray-900/80 backdrop-blur-xl rounded-2xl flex flex-col ${themeFull} ${cardMood} h-full min-h-[350px] mt-2">
+                    <div class="relative score-card ${cardClass} backdrop-blur-xl rounded-2xl flex flex-col ${cardMood} h-full min-h-[350px] mt-2 transition-colors duration-500">
                         ${leaderBadge}
                         ${loserBadge}
                         <div class="flex flex-col items-center justify-center p-4 pb-2 flex-grow pt-8"> 
@@ -289,8 +346,8 @@
                                 ${team.score}
                             </div>
                         </div>
-                        <div class="bg-black/40 w-full p-4 rounded-b-2xl border-t border-gray-700/50">
-                            <div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold uppercase tracking-widest text-gray-500">History</span><div class="h-[1px] bg-gray-700 flex-grow"></div></div>
+                        <div class="history-section bg-black/20 w-full p-4 rounded-b-2xl border-t border-gray-500/20">
+                            <div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold uppercase tracking-widest text-gray-400 opacity-70">History</span><div class="h-[1px] bg-gray-500/30 flex-grow"></div></div>
                             <div class="history-scroll overflow-y-auto max-h-[100px] pr-2">${historyHtml}</div>
                         </div>
                     </div>
