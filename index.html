@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petanque Scoreboard Pro</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;600;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --font-scale: 1;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: url('https://images.unsplash.com/photo-1556623696-291771804e12?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed; 
+            background-size: cover;
+            background-color: #1a1a1a;
+            transition: background-image 0.5s ease-in-out;
+        }
+
+        /* --- LIGHT MODE STYLES --- */
+        body.light-mode {
+            background-image: url('https://images.unsplash.com/photo-1627464082725-783321523277?q=80&w=1920&auto=format&fit=crop');
+            color: #333;
+        }
+        body.light-mode .backdrop-overlay {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(6px);
+        }
+        body.light-mode .score-card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        body.light-mode .text-white { color: #1f2937 !important; }
+        body.light-mode .text-gray-400 { color: #4b5563 !important; }
+        body.light-mode .border-gray-700\/50 { border-color: rgba(0,0,0,0.1) !important; }
+        body.light-mode .bg-black\/40 { background-color: rgba(0,0,0,0.05) !important; }
+        
+        body.light-mode .control-btn {
+            background-color: rgba(255,255,255,0.9);
+            color: #333;
+            border-color: #ccc;
+        }
+        /* ----------------------- */
+
+        .backdrop-overlay { 
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(8px); 
+            transition: all 0.5s ease;
+        }
+
+        .score-card { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: visible; 
+        }
+
+        /* --- COLORS & NEON GLOW (4 สีหลัก) --- */
+        .glow-purple { box-shadow: 0 0 30px rgba(168, 85, 247, 0.3); border-top: 6px solid #a855f7; }
+        .glow-red { box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); border-top: 6px solid #ef4444; }
+        .glow-yellow { box-shadow: 0 0 30px rgba(234, 179, 8, 0.3); border-top: 6px solid #eab308; }
+        .glow-blue { box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); border-top: 6px solid #3b82f6; }
+        .glow-cyan { box-shadow: 0 0 30px rgba(6, 182, 212, 0.3); border-top: 6px solid #06b6d4; }
+
+        .score-number {
+            font-size: calc(6rem * var(--font-scale));
+            line-height: 1;
+            transition: font-size 0.2s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Neon Text Logic (ตัวเลขคมชัด) */
+        .neon-text {
+            text-shadow: 0 0 1px currentColor, 0 0 10px currentColor;
+        }
+        body.light-mode .neon-text {
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.15) !important;
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        .history-scroll::-webkit-scrollbar { width: 4px; }
+        .history-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+        .history-scroll::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 4px; }
+
+        @media (min-width: 768px) { .score-number { font-size: calc(7rem * var(--font-scale)); } }
+        @media (min-width: 1280px) { .score-number { font-size: calc(8rem * var(--font-scale)); } }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden text-white">
+
+    <div class="backdrop-overlay w-full h-full flex flex-col items-center justify-center p-4">
+        
+        <header class="mb-8 text-center animate__animated animate__fadeInDown flex-shrink-0 relative z-10">
+            <h2 class="text-xl md:text-3xl font-bold text-yellow-100 tracking-widest mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase">
+                🏆 กิจกรรมสานสัมพันธ์ <span class="text-yellow-400">ศาลเด็กประจวบเกมส์</span>
+            </h2>
+        
+            <div class="relative inline-block">
+                <h1 id="sport-title" 
+                    class="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 via-orange-400 to-yellow-600 tracking-wider filter drop-shadow-2xl"
+                    style="text-shadow: 0 4px 8px rgba(0,0,0,0.5);">
+                    กำลังโหลด...
+                </h1>
+                <div class="w-full h-1.5 bg-gradient-to-r from-transparent via-yellow-500 to-transparent mt-1 rounded-full opacity-80"></div>
+            </div>
+        </header>
+
+        <div id="score-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-[95%] h-full max-h-[85vh] overflow-y-auto pb-4 pt-10 px-2">
+            <div class="col-span-1 md:col-span-2 lg:col-span-4 flex justify-center items-center h-64 animate-pulse">
+                <div class="text-xl text-gray-400 flex flex-col items-center">
+                    กำลังเชื่อมต่อ Google Sheets...
+                </div>
+            </div>
+        </div>
+        
+        <div id="error-msg" class="hidden absolute bottom-5 left-5 bg-red-600/90 px-6 py-3 rounded-full text-sm font-bold shadow-lg animate__animated animate__fadeInUp"></div>
+
+        <div class="fixed bottom-5 right-5 flex gap-2 z-50 animate__animated animate__fadeInRight">
+            <button onclick="toggleTheme()" class="control-btn w-10 h-10 bg-indigo-600/90 hover:bg-indigo-500 text-white rounded-full flex items-center justify-center border border-indigo-400 shadow-lg transition-all active:scale-95 mr-2">
+                <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </button>
+            <button onclick="adjustFontSize(-0.1)" class="control-btn w-10 h-10 bg-gray-800/80 hover:bg-gray-700 text-white rounded-full flex items-center justify-center border border-gray-600 shadow-lg transition-all active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
+            </button>
+            <div class="control-btn flex items-center justify-center bg-gray-900/80 px-2 rounded-lg border border-gray-700 text-xs text-gray-400 font-bold">SIZE</div>
+            <button onclick="adjustFontSize(0.1)" class="control-btn w-10 h-10 bg-gray-800/80 hover:bg-gray-700 text-white rounded-full flex items-center justify-center border border-gray-600 shadow-lg transition-all active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            </button>
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+        // ใช้ค่าจาก config.js
+        const SHEET_ID = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_ID : '';
+        const SHEET_NAME = (typeof CONFIG !== 'undefined') ? CONFIG.SHEET_NAME : 'Sheet1';
+        const REFRESH_RATE = (typeof CONFIG !== 'undefined') ? CONFIG.REFRESH_RATE : 2000;
+
+        let previousScores = {};
+        let currentScale = 1.0; 
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            const icon = document.getElementById('theme-icon');
+            if (isLight) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+            }
+        }
+
+        function adjustFontSize(delta) {
+            currentScale += delta;
+            if (currentScale < 0.5) currentScale = 0.5;
+            if (currentScale > 2.0) currentScale = 2.0;
+            document.documentElement.style.setProperty('--font-scale', currentScale);
+        }
+
+        window.displayScores = function(json) {
+            try {
+                if (!json.table || !json.table.rows) throw new Error("ไม่พบข้อมูล");
+                const rows = json.table.rows;
+                const cols = json.table.cols;
+
+                // ดึงชื่อกีฬาจากหัวตารางช่อง A1
+                const sportName = cols[0].label;
+                if (sportName && sportName.trim() !== "") {
+                    document.getElementById('sport-title').innerText = sportName;
+                }
+                
+                const teams = rows.map(r => {
+                    const name = r.c[0]?.v || ''; 
+                    const score = (r.c[1]?.v !== null && r.c[1]?.v !== undefined) ? r.c[1].v : 0;
+                    const color = r.c[2]?.v || 'red';
+                    
+                    let history = [];
+                    if (r.c.length > 3) {
+                        for(let i = 3; i < r.c.length; i++) {
+                            if(r.c[i] && r.c[i].v !== null && r.c[i].v !== "") {
+                                history.push({ round: cols[i].label, val: r.c[i].v });
+                            }
+                        }
+                    }
+                    return { name, score, color, history };
+                }).filter(t => t.name !== ''); 
+
+                renderBoard(teams);
+                document.getElementById('error-msg').classList.add('hidden');
+            } catch (err) {
+                console.error(err);
+                if (!SHEET_ID) {
+                    const errDiv = document.getElementById('error-msg');
+                    errDiv.innerHTML = "⚠️ ไม่พบไฟล์ config.js หรือ SHEET_ID ไม่ถูกต้อง";
+                    errDiv.classList.remove('hidden');
+                }
+            }
+        };
+
+        function fetchScores() {
+            if (!SHEET_ID) return;
+            const script = document.createElement('script');
+            const apiUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:displayScores&sheet=${SHEET_NAME}&_=${Date.now()}`;
+            script.src = apiUrl;
+            document.body.appendChild(script);
+            script.onload = () => { setTimeout(() => document.body.removeChild(script), 100); };
+        }
+
+        function renderBoard(teams) {
+            const container = document.getElementById('score-container');
+            let html = '';
+            
+            const maxScore = Math.max(...teams.map(t => t.score));
+            const minScore = Math.min(...teams.map(t => t.score));
+
+            teams.forEach((team) => {
+                const isChanged = previousScores[team.name] !== undefined && previousScores[team.name] !== team.score;
+                const animationClass = isChanged ? 'animate__animated animate__heartBeat' : '';
+                
+                const colorMap = {
+                    'purple': 'text-purple-500 glow-purple border-purple-500', 'สีม่วง': 'text-purple-500 glow-purple border-purple-500', 'ม่วง': 'text-purple-500 glow-purple border-purple-500',
+                    'red': 'text-red-500 glow-red border-red-500', 'สีแดง': 'text-red-500 glow-red border-red-500', 'แดง': 'text-red-500 glow-red border-red-500',
+                    'yellow': 'text-yellow-400 glow-yellow border-yellow-400', 'สีเหลือง': 'text-yellow-400 glow-yellow border-yellow-400', 'เหลือง': 'text-yellow-400 glow-yellow border-yellow-400',
+                    'blue': 'text-blue-500 glow-blue border-blue-500', 'สีน้ำเงิน': 'text-blue-500 glow-blue border-blue-500', 'น้ำเงิน': 'text-blue-500 glow-blue border-blue-500',
+                    'cyan': 'text-cyan-400 glow-cyan border-cyan-400'
+                };
+                
+                const themeFull = colorMap[team.color] || colorMap[team.color.toLowerCase()] || 'text-white border-white';
+                const textColor = themeFull.split(' ')[0];
+                
+                // ตราผู้นำ (มงกุฎ)
+                const leaderBadge = (team.score === maxScore && team.score > minScore) 
+                    ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__bounceIn drop-shadow-[0_0_15px_rgba(255,215,0,0.8)] z-20">👑</div>` 
+                    : '';
+
+                // ตราผู้ตาม (ร้องไห้ + สะอื้น)
+                const loserBadge = (team.score === minScore && team.score < maxScore)
+                    ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__pulse animate__infinite z-20">😭</div>`
+                    : '';
+                
+                // Mood คนแพ้
+                const cardMood = (team.score === minScore && team.score < maxScore) ? 'brightness-90 grayscale-[0.3]' : '';
+
+                let historyHtml = team.history.length > 0 
+                    ? team.history.slice().reverse().map(h => `<div class="flex justify-between items-center text-sm py-1 border-b border-gray-700/50 last:border-0"><span class="text-gray-400">${h.round}</span><span class="font-bold ${textColor}">+${h.val}</span></div>`).join('') 
+                    : `<div class="text-center text-xs text-gray-600 py-2">- ยังไม่มีคะแนน -</div>`;
+
+                html += `
+                    <div class="relative score-card bg-gray-900/80 backdrop-blur-xl rounded-2xl flex flex-col ${themeFull} ${cardMood} h-full min-h-[350px] mt-2">
+                        ${leaderBadge}
+                        ${loserBadge}
+                        <div class="flex flex-col items-center justify-center p-4 pb-2 flex-grow pt-8"> 
+                            <div class="text-xl md:text-2xl font-bold text-white mb-1 drop-shadow-md tracking-wider text-center">${team.name}</div>
+                            <div class="score-number font-black ${textColor} ${animationClass} neon-text">
+                                ${team.score}
+                            </div>
+                        </div>
+                        <div class="bg-black/40 w-full p-4 rounded-b-2xl border-t border-gray-700/50">
+                            <div class="flex items-center gap-2 mb-2"><span class="text-xs font-bold uppercase tracking-widest text-gray-500">History</span><div class="h-[1px] bg-gray-700 flex-grow"></div></div>
+                            <div class="history-scroll overflow-y-auto max-h-[100px] pr-2">${historyHtml}</div>
+                        </div>
+                    </div>
+                `;
+                previousScores[team.name] = team.score;
+            });
+            container.innerHTML = html;
+        }
+
+        fetchScores();
+        setInterval(fetchScores, REFRESH_RATE);
+    </script>
+</body>
+</html>
