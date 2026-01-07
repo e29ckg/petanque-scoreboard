@@ -222,6 +222,19 @@
             const container = document.getElementById('score-container');
             let html = '';
             
+            // --- [ส่วนใหม่] ปรับ Grid อัตโนมัติตามจำนวนทีม ---
+            // พื้นฐาน Class ที่ต้องมีเสมอ
+            let baseClasses = "grid gap-6 w-full max-w-[95%] h-full max-h-[85vh] overflow-y-auto pb-4 pt-10 px-2 transition-all duration-500";
+            
+            if (teams.length <= 2) {
+                // กรณีมี 1 หรือ 2 ทีม: ให้แบ่งครึ่งจอ (แสดงผลใหญ่ขึ้น)
+                container.className = `${baseClasses} grid-cols-1 md:grid-cols-2`;
+            } else {
+                // กรณีมี 3 หรือ 4 ทีม: ให้แบ่ง 4 ช่องตามเดิม
+                container.className = `${baseClasses} grid-cols-1 md:grid-cols-2 lg:grid-cols-4`;
+            }
+            // ---------------------------------------------
+            
             const maxScore = Math.max(...teams.map(t => t.score));
             const minScore = Math.min(...teams.map(t => t.score));
 
@@ -240,17 +253,16 @@
                 const themeFull = colorMap[team.color] || colorMap[team.color.toLowerCase()] || 'text-white border-white';
                 const textColor = themeFull.split(' ')[0];
                 
-                // ตราผู้นำ (มงกุฎ)
+                // Badge ผู้นำ (มงกุฎ)
                 const leaderBadge = (team.score === maxScore && team.score > minScore) 
                     ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__bounceIn drop-shadow-[0_0_15px_rgba(255,215,0,0.8)] z-20">👑</div>` 
                     : '';
 
-                // ตราผู้ตาม (หมู 🐷 เด้งดึ๋ง)
+                // Badge ผู้ตาม (หมู 🐷)
                 const loserBadge = (team.score === minScore && team.score < maxScore)
                     ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__pulse animate__infinite z-20">🐷</div>`
                     : '';
                 
-                // Mood คนแพ้ (หมู)
                 const cardMood = (team.score === minScore && team.score < maxScore) ? 'brightness-90 grayscale-[0.3]' : '';
 
                 let historyHtml = team.history.length > 0 
