@@ -245,12 +245,12 @@
                     ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__bounceIn drop-shadow-[0_0_15px_rgba(255,215,0,0.8)] z-20">👑</div>` 
                     : '';
 
-                // ตราผู้ตาม (ร้องไห้ + สะอื้น)
+                // ตราผู้ตาม (หมู 🐷 เด้งดึ๋ง)
                 const loserBadge = (team.score === minScore && team.score < maxScore)
                     ? `<div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate__animated animate__pulse animate__infinite z-20">🐷</div>`
                     : '';
                 
-                // Mood คนแพ้
+                // Mood คนแพ้ (หมู)
                 const cardMood = (team.score === minScore && team.score < maxScore) ? 'brightness-90 grayscale-[0.3]' : '';
 
                 let historyHtml = team.history.length > 0 
